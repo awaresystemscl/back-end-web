@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class Mashup extends Migration
+class ConjuntoSatisfaccionMashup extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,15 @@ class Mashup extends Migration
      */
     public function up()
     {
-        Schema::create('mashups', function (Blueprint $table) {
+        Schema::create('conjunto_satisfaccion_mashup', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('nombre');
-            $table->string('descripcion');
-            $table->string('url');
-            $table->integer('limite')->default(90);
-            //foraneas
+            $table->integer('avg');
+            //foranea
             $table->integer('usuario_id')->unsigned();
             $table->foreign('usuario_id')->references('id')->on('usuarios');
+            $table->integer('mashup_id')->unsigned();
+            $table->foreign('mashup_id')->references('id')->on('mashups');
+            $table->timestamp('fecha');
             $table->timestamps();
         });
     }
@@ -33,7 +33,6 @@ class Mashup extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('mashups');
+        Schema::dropIfExists('conjunto_satisfaccion_mashup');
     }
 }
-//lineas 10

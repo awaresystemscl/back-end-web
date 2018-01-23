@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class Apis extends Migration
+class ApisDataTest extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,16 @@ class Apis extends Migration
      */
     public function up()
     {
-        Schema::create('apis', function (Blueprint $table) {
+        Schema::create('apis_data_test', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nombre');
-            $table->string('descripcion');
-            $table->string('url');
-            $table->string('urlUnica')->unique();
+            $table->double('rendimiento');
+            $table->double('latencia');
+            $table->double('status');
+            $table->double('tiempo_de_respuesta');
+            $table->double('disponibilidad');
+            $table->double('confiabilidad');
+            $table->timestamp('fecha');
             $table->timestamps();
         });
     }
@@ -30,8 +34,6 @@ class Apis extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('apis');
-        
+        Schema::dropIfExists('apis_data_test');
     }
 }
-//lineas 9

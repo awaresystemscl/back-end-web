@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class Apis extends Migration
+class Alertas extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class Apis extends Migration
      */
     public function up()
     {
-        Schema::create('apis', function (Blueprint $table) {
+        Schema::create('alertas', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('nombre');
-            $table->string('descripcion');
-            $table->string('url');
-            $table->string('urlUnica')->unique();
+            //foranea
+            $table->integer('mashup_id')->unsigned();
+            $table->foreign('mashup_id')->references('id')->on('mashups');
+            $table->timestamp('fecha');
             $table->timestamps();
         });
     }
@@ -30,8 +30,6 @@ class Apis extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('apis');
-        
+        Schema::dropIfExists('alertas');
     }
 }
-//lineas 9

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Modelos\Mashup;
 use App\Http\Controllers\Mashup\ComponenteController;
+use DB;
 
 class MashupController extends Controller
 {
@@ -29,6 +30,40 @@ class MashupController extends Controller
         // $empresa = Empresa::find($sucursal->empresa_id)->get();
         return response()->json(compact('mashup'));
 	    
+  }
+
+  public function verMisMashups(Request $request)
+  {
+        $verficiar =  new AutenticadorController();
+        if($verficiar->verificarUsuario($request))
+        {
+          $usuarioID = JWTAuth::toUser(JWTAuth::getToken())->id;
+          $mashups = DB::select("select mashups.nombre, conjunto_satisfaccion_mashup.avg, conjunto_satisfaccion_mashup.fecha, 
+                         conjunto_satisfaccion_mashup.usuario_id, conjunto_satisfaccion_mashup.mashup_id 
+                         from mashups 
+                         left join conjunto_satisfaccion_mashup 
+                         on mashups.id = conjunto_satisfaccion_mashup.mashup_id 
+                         where conjunto_satisfaccion_mashup.fecha >= 
+                         (select to_date(to_char(fecha,'DD-MM-YYYY'),'DD-MM-YYYY') 
+                         from conjunto_satisfaccion_mashup order by fecha desc limit 1) 
+                         and conjunto_satisfaccion_mashup.usuario_id = ".$usuarioID." 
+                         order by conjunto_satisfaccion_mashup.fecha asc;");
+          return response()->json(compact('mashups'));
+        }      
+        if($verficiar->verificarAdministrador($request))
+        {
+          $usuarioID = JWTAuth::toUser(JWTAuth::getToken())->id;
+          $mashups = DB::select("select mashups.nombre, conjunto_satisfaccion_mashup.avg, conjunto_satisfaccion_mashup.fecha, 
+                         conjunto_satisfaccion_mashup.usuario_id, conjunto_satisfaccion_mashup.mashup_id 
+                         from mashups 
+                         left join conjunto_satisfaccion_mashup 
+                         on mashups.id = conjunto_satisfaccion_mashup.mashup_id 
+                         where conjunto_satisfaccion_mashup.fecha >= 
+                         (select to_date(to_char(fecha,'DD-MM-YYYY'),'DD-MM-YYYY') 
+                         from conjunto_satisfaccion_mashup order by fecha desc limit 1) 
+                         order by conjunto_satisfaccion_mashup.fecha asc;");
+          return response()->json(compact('mashups'));
+        }
   }
 
   //API CRUD
@@ -54,6 +89,7 @@ class MashupController extends Controller
     {
       $usuarioID = JWTAuth::toUser(JWTAuth::getToken())->id;
       // $api = Api::where('id',$request->input('id'))->first();
+      // echo $request;
 
       $crearMashup = [
           'nombre' => $request->input('nombre'),
@@ -69,12 +105,30 @@ class MashupController extends Controller
         $compo->crearComponenteLocal($componente, $id);
       }
 
-      // return response()->json(compact('api','usuarioID'));
+      return response()->json(compact('usuarioID'));
     }
-    else
+    if($verficiar->verificarAdministrador($request))
     {
-      return response()->json(['Error' => 'Permiso Denegado']);
-    }   
+      $usuarioID = JWTAuth::toUser(JWTAuth::getToken())->id;
+      // $api = Api::where('id',$request->input('id'))->first();
+      // echo $request;
+
+      $crearMashup = [
+          'nombre' => $request->input('nombre'),
+          'descripcion' => $request->input('descripcion'),
+          'url' => $request->input('url'),
+          'usuario_id' => $usuarioID //hay que cambiarlo al usuario de token
+        ];
+      $compo =  new ComponenteController();
+      $componentes = $request->input('apis');
+      $mashup = Mashup::create($crearMashup);
+      $id = $mashup->id;
+      foreach ($componentes as $key => $componente) {
+        $compo->crearComponenteLocal($componente, $id);
+      }
+
+      return response()->json(compact('usuarioID'));
+    }
   }
 
 }

@@ -15,7 +15,7 @@ class AutenticadorController extends Controller
        $this->middleware('jwt.auth', ['except' => ['autentificadorDeUsuario']]);
    }
 
-   public function autenticarUsuario(Request $request)
+   public function autentificadorDeUsuario(Request $request)
    {
     	$credencial = $request->only('email', 'password');
     	$token = null;
@@ -49,5 +49,31 @@ class AutenticadorController extends Controller
       }
 
     }
+
+    public function verificarAdministrador(Request $request)
+    {
+      $token = JWTAuth::getToken();
+      $usuario = JWTAuth::toUser($token);
+      //El usuario tiene el permiso ?
+      if($usuario->tipo == 'administrador')
+      {
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+    }
+
+    public function validarSession(Request $request)
+    {
+      $token = JWTAuth::getToken();
+      $usuario = JWTAuth::toUser($token);
+      // print_r("paso");
+      return response(200);
+    }
+
+     
+
 }
 //Lineas 20

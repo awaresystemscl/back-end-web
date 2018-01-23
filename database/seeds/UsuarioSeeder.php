@@ -15,12 +15,13 @@ class UsuarioSeeder extends Seeder
         	[
         		'nombre' => 'Sebastian',
         		'email' => 'sebacav@gmail.com',
+                'tipo' => 'administrador',
         		'password' => Hash::make('3116dd'),
         	],
             [
                 'nombre' => 'Romina',
                 'email' => 'romina.torres@unab.cl',
-                'password' => Hash::make('awaresystemslala123'),
+                'password' => Hash::make('lala123'),
             ]
         ];
 

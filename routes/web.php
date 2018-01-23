@@ -14,23 +14,35 @@
 Route::get('/', function () {
     return view('welcome');
 });
-
+Route::post('/test', 'Mashup\ComponenteController@test');
+Route::post('/registrar', 'UsuarioController@registrarUsuario');
+Route::get('/apisDataTest', 'Api\ApiController@apisDataTest');
+Route::post('/estadistica', 'Api\ApiController@estadisticaCuartil');
+Route::post('/ultimoApiTest', 'Api\ApiController@verUltimoApiTest');
+Route::get('/misMashups', 'Mashup\MashupController@verMisMashups');
 Route::group(['middleware' => 'cors'], function() {
     //Validacion de Login creacion del token
-    Route::post('/autenticacion', 'AutenticadorController@autenticarUsuario');
+    Route::post('/autenticacion', 'AutenticadorController@autentificadorDeUsuario');
+    Route::get('/validarSession', 'AutenticadorController@validarSession');
     
+        //Gestion de mashups
+    // Route::post('/mashup', 'Mashup\MashupController@crearMashup');
+    // Route::delete('/mashup', 'MashupController@eliminarMashup');
+    // Route::update('/mashup', 'MashupController@editarMashup');
     
     //Gestion de mashups
     Route::get('/mashup', 'Mashup\MashupController@verMashup');
     Route::post('/mashup', 'Mashup\MashupController@crearMashup');
     // Route::delete('/mashup', 'MashupController@eliminarMashup');
     // Route::update('/mashup', 'MashupController@editarMashup');
+    // Route::get('/misMashups', 'Mashup\MashupController@verMisMashups');
 
     //Gestion de api
     Route::get('/api', 'Api\ApiController@verApi');
     Route::post('/api', 'Api\ApiController@crearApi');
     // Route::delete('/api', 'Api@eliminarApi');
     // Route::update('/api', 'Api@editarApi');
+    Route::post('/categoriaApis', 'Api\ApiController@categoriaApis');
 
     //Gestion de categoria
     Route::get('/categoria', 'Api\CategoriaController@verCategoria');
@@ -43,6 +55,8 @@ Route::group(['middleware' => 'cors'], function() {
     Route::post('/componente', 'Mashup\ComponenteController@crearComponente');
     // Route::delete('/componente', 'Mashup\ComponenteController@eliminarComponente');
     // Route::update('/componente', 'Mashup\ComponenteController@editarComponente');
+    Route::post('/misComponentes', 'Mashup\ComponenteController@verMisComponentes');
+    Route::post('/verRestriccionesDeComponente', 'Mashup\ComponenteController@verRestriccionesDeComponente');
 
     //Gestion de factor
     Route::get('/factor', 'Factores\FactorController@verFactor');

@@ -27,9 +27,9 @@ class FactorSeeder extends Seeder
             ],
             [
                 'nombre' => 'Rendimiento',
-                'rango' => 100,
-                'medida' => 'Invokes/sec',
-                'tipo_de_medida' => 'mayor'
+                'rango' => 10000,
+                'medida' => 'ms',
+                'tipo_de_medida' => 'menor'
             ],
             [
                 'nombre' => 'Confiabilidad',

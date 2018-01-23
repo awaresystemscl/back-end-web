@@ -18,7 +18,8 @@ class Api extends Model
     protected $fillable = [
         'nombre',
         'descripcion',
-        'url'
+        'url',
+        'urlUnica'
     ];
     protected $hidden = [
         'created_at',
